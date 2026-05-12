@@ -21,7 +21,9 @@ static ENV_LOCK: Mutex<()> = Mutex::new(());
 
 #[tokio::test(flavor = "multi_thread")]
 async fn handshake_frames_match_v1_fixture() {
-    let listener = TcpListener::bind("127.0.0.1:0").await.expect("bind listener");
+    let listener = TcpListener::bind("127.0.0.1:0")
+        .await
+        .expect("bind listener");
     let addr = listener.local_addr().expect("listener addr");
 
     let server = tokio::spawn(async move {
@@ -63,14 +65,20 @@ async fn handshake_frames_match_v1_fixture() {
     .await
     .expect("join binary task");
 
-    assert!(output.status.success(), "stderr: {}", String::from_utf8_lossy(&output.stderr));
+    assert!(
+        output.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
     server.await.expect("server task completes");
 }
 
 #[tokio::test(flavor = "multi_thread")]
 async fn run_final_contract_matches_v1_fixture() {
     let repo_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    let listener = TcpListener::bind("127.0.0.1:0").await.expect("bind listener");
+    let listener = TcpListener::bind("127.0.0.1:0")
+        .await
+        .expect("bind listener");
     let addr = listener.local_addr().expect("listener addr");
 
     let server = tokio::spawn(async move {
@@ -114,14 +122,23 @@ async fn run_final_contract_matches_v1_fixture() {
 
     let output = tokio::task::spawn_blocking(move || {
         ProcessCommand::new(env!("CARGO_BIN_EXE_codex-app-server-client-cli"))
-            .args(["--url", &format!("ws://{addr}"), "run", "summarize the workspace"])
+            .args([
+                "--url",
+                &format!("ws://{addr}"),
+                "run",
+                "summarize the workspace",
+            ])
             .output()
             .expect("run binary")
     })
     .await
     .expect("join binary task");
 
-    assert!(output.status.success(), "stderr: {}", String::from_utf8_lossy(&output.stderr));
+    assert!(
+        output.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
     let envelope: Value =
         serde_json::from_slice(&output.stdout).expect("parse final json envelope");
     let actual = json!({
@@ -145,7 +162,9 @@ async fn approval_required_contract_matches_v1_fixture() {
     let _config_dir = TestConfigDir::install("approval_required_contract_matches_v1_fixture");
     let repo_root = temp_repo("approval_contract");
 
-    let listener = TcpListener::bind("127.0.0.1:0").await.expect("bind listener");
+    let listener = TcpListener::bind("127.0.0.1:0")
+        .await
+        .expect("bind listener");
     let addr = listener.local_addr().expect("listener addr");
     let repo_root_for_server = repo_root.clone();
 
@@ -203,17 +222,17 @@ async fn approval_required_contract_matches_v1_fixture() {
     let output = tokio::task::spawn_blocking({
         let repo_root = repo_root.clone();
         move || {
-        ProcessCommand::new(env!("CARGO_BIN_EXE_codex-app-server-client-cli"))
-            .args([
-                "--url",
-                &format!("ws://{addr}"),
-                "--cwd",
-                repo_root.to_str().expect("repo path utf8"),
-                "run",
-                "needs approval",
-            ])
-            .output()
-            .expect("run binary")
+            ProcessCommand::new(env!("CARGO_BIN_EXE_codex-app-server-client-cli"))
+                .args([
+                    "--url",
+                    &format!("ws://{addr}"),
+                    "--cwd",
+                    repo_root.to_str().expect("repo path utf8"),
+                    "run",
+                    "needs approval",
+                ])
+                .output()
+                .expect("run binary")
         }
     })
     .await
@@ -222,7 +241,11 @@ async fn approval_required_contract_matches_v1_fixture() {
     assert_eq!(output.status.code(), Some(7));
     let mut envelope: Value =
         serde_json::from_slice(&output.stdout).expect("parse approval envelope");
-    replace_string(&mut envelope, &repo_root.display().to_string(), "__REPO_ROOT__");
+    replace_string(
+        &mut envelope,
+        &repo_root.display().to_string(),
+        "__REPO_ROOT__",
+    );
     assert_json_eq(&envelope, &fixture_json("approval/required_envelope.json"));
 
     server.await.expect("server task completes");
@@ -233,8 +256,12 @@ async fn resume_contract_matches_v1_fixture() {
     let _config_dir = TestConfigDir::install("resume_contract_matches_v1_fixture");
     let repo_root = temp_repo("resume_contract");
 
-    let approval_listener = TcpListener::bind("127.0.0.1:0").await.expect("bind approval listener");
-    let approval_addr = approval_listener.local_addr().expect("approval listener addr");
+    let approval_listener = TcpListener::bind("127.0.0.1:0")
+        .await
+        .expect("bind approval listener");
+    let approval_addr = approval_listener
+        .local_addr()
+        .expect("approval listener addr");
     let repo_root_for_approval_server = repo_root.clone();
 
     let approval_server = tokio::spawn(async move {
@@ -315,13 +342,18 @@ async fn resume_contract_matches_v1_fixture() {
 
     approval_server.await.expect("approval server completes");
 
-    let resume_listener = TcpListener::bind("127.0.0.1:0").await.expect("bind resume listener");
+    let resume_listener = TcpListener::bind("127.0.0.1:0")
+        .await
+        .expect("bind resume listener");
     let resume_addr = resume_listener.local_addr().expect("resume listener addr");
     let repo_root_for_resume_server = repo_root.clone();
     let resume_token_for_server = resume_token.clone();
 
     let resume_server = tokio::spawn(async move {
-        let (stream, _) = resume_listener.accept().await.expect("accept resume connection");
+        let (stream, _) = resume_listener
+            .accept()
+            .await
+            .expect("accept resume connection");
         let mut socket = accept_async(stream).await.expect("accept websocket");
         handshake(&mut socket).await;
 
@@ -411,14 +443,19 @@ async fn resume_contract_matches_v1_fixture() {
             "server": envelope["meta"]["server"],
         }
     });
-    assert_json_eq(&actual, &fixture_json("resume/final_envelope_contract.json"));
+    assert_json_eq(
+        &actual,
+        &fixture_json("resume/final_envelope_contract.json"),
+    );
 
     resume_server.await.expect("resume server completes");
 }
 
 #[tokio::test(flavor = "multi_thread")]
 async fn watch_contract_matches_v1_fixture() {
-    let listener = TcpListener::bind("127.0.0.1:0").await.expect("bind listener");
+    let listener = TcpListener::bind("127.0.0.1:0")
+        .await
+        .expect("bind listener");
     let addr = listener.local_addr().expect("listener addr");
 
     let server = tokio::spawn(async move {
@@ -499,7 +536,9 @@ async fn explicit_ephemeral_flow_matches_v1_fixture() {
     let nested = repo_root.join("src/bin");
     fs::create_dir_all(&nested).expect("nested dir should exist");
 
-    let listener = TcpListener::bind("127.0.0.1:0").await.expect("bind listener");
+    let listener = TcpListener::bind("127.0.0.1:0")
+        .await
+        .expect("bind listener");
     let addr = listener.local_addr().expect("listener addr");
     let repo_root_for_server = repo_root.clone();
 
@@ -565,7 +604,11 @@ async fn explicit_ephemeral_flow_matches_v1_fixture() {
         "--ephemeral",
     ]);
     let config = load_config_locked(&cli);
-    let output = expect_final(execute(cli.command, config).await.expect("run should succeed"));
+    let output = expect_final(
+        execute(cli.command, config)
+            .await
+            .expect("run should succeed"),
+    );
     let start_params = server.await.expect("server task completes");
 
     let actual = json!({
@@ -583,7 +626,9 @@ async fn explicit_ephemeral_flow_matches_v1_fixture() {
 async fn session_scoped_yolo_visibility_matches_v1_fixture() {
     let repo_root = temp_repo("yolo_contract");
 
-    let listener = TcpListener::bind("127.0.0.1:0").await.expect("bind listener");
+    let listener = TcpListener::bind("127.0.0.1:0")
+        .await
+        .expect("bind listener");
     let addr = listener.local_addr().expect("listener addr");
     let repo_root_for_server = repo_root.clone();
 
@@ -649,7 +694,11 @@ async fn session_scoped_yolo_visibility_matches_v1_fixture() {
         "continue with session defaults",
     ]);
     let config = load_config_locked(&cli);
-    let output = expect_final(execute(cli.command, config).await.expect("run should succeed"));
+    let output = expect_final(
+        execute(cli.command, config)
+            .await
+            .expect("run should succeed"),
+    );
     let (resume_params, turn_params) = server.await.expect("server task completes");
 
     let actual = json!({
@@ -670,8 +719,10 @@ fn fixture_json(name: &str) -> Value {
         .join("fixtures")
         .join("protocol")
         .join(name);
-    let raw = fs::read_to_string(&path).unwrap_or_else(|err| panic!("read fixture {}: {err}", path.display()));
-    serde_json::from_str(&raw).unwrap_or_else(|err| panic!("parse fixture {}: {err}", path.display()))
+    let raw = fs::read_to_string(&path)
+        .unwrap_or_else(|err| panic!("read fixture {}: {err}", path.display()));
+    serde_json::from_str(&raw)
+        .unwrap_or_else(|err| panic!("parse fixture {}: {err}", path.display()))
 }
 
 fn parse_jsonl(stdout: &[u8]) -> Vec<Value> {
@@ -703,7 +754,13 @@ async fn read_notification(
 }
 
 fn assert_json_eq(actual: &Value, expected: &Value) {
-    assert_eq!(actual, expected, "actual:\n{}\n\nexpected:\n{}", pretty(actual), pretty(expected));
+    assert_eq!(
+        actual,
+        expected,
+        "actual:\n{}\n\nexpected:\n{}",
+        pretty(actual),
+        pretty(expected)
+    );
 }
 
 fn pretty(value: &Value) -> String {
@@ -712,11 +769,10 @@ fn pretty(value: &Value) -> String {
 
 fn replace_string(value: &mut Value, target: &str, replacement: &str) {
     match value {
-        Value::String(current) => {
-            if current.contains(target) {
-                *current = current.replace(target, replacement);
-            }
+        Value::String(current) if current.contains(target) => {
+            *current = current.replace(target, replacement);
         }
+        Value::String(_) => {}
         Value::Array(items) => {
             for item in items {
                 replace_string(item, target, replacement);
@@ -734,7 +790,11 @@ fn replace_string(value: &mut Value, target: &str, replacement: &str) {
 fn normalize_repo_root(value: Value, repo_root: &Path) -> Value {
     let mut value = value;
     if let Ok(canonical) = fs::canonicalize(repo_root) {
-        replace_string(&mut value, &canonical.display().to_string(), "__REPO_ROOT__");
+        replace_string(
+            &mut value,
+            &canonical.display().to_string(),
+            "__REPO_ROOT__",
+        );
     }
     let repo_root_display = repo_root.display().to_string();
     replace_string(&mut value, &repo_root_display, "__REPO_ROOT__");
