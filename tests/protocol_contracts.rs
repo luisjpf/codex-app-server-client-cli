@@ -769,11 +769,10 @@ fn pretty(value: &Value) -> String {
 
 fn replace_string(value: &mut Value, target: &str, replacement: &str) {
     match value {
-        Value::String(current) => {
-            if current.contains(target) {
-                *current = current.replace(target, replacement);
-            }
+        Value::String(current) if current.contains(target) => {
+            *current = current.replace(target, replacement);
         }
+        Value::String(_) => {}
         Value::Array(items) => {
             for item in items {
                 replace_string(item, target, replacement);
