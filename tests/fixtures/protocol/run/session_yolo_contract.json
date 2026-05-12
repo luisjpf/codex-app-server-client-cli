@@ -1,0 +1,39 @@
+{
+  "thread_resume_params": {
+    "threadId": "sess_yolo",
+    "excludeTurns": true,
+    "cwd": "__REPO_ROOT__",
+    "approvalPolicy": "on-request",
+    "sandboxPolicy": "workspace-write",
+    "model": null,
+    "yoloMode": true
+  },
+  "turn_start_params": {
+    "threadId": "sess_yolo",
+    "input": "continue with session defaults",
+    "yoloMode": true
+  },
+  "session": {
+    "alias": "feature-yolo",
+    "ephemeral": false,
+    "id": "sess_yolo",
+    "last_active_at": null,
+    "repo_root": "__REPO_ROOT__",
+    "workspace_root": "__REPO_ROOT__",
+    "yolo": true
+  },
+  "meta": {
+    "session_selection": {
+      "lifecycle": "reused",
+      "reason": "workspace_scoped_default"
+    },
+    "policy": {
+      "last_approval": null,
+      "yolo": {
+        "effective": true,
+        "session_enabled": true,
+        "source": "session"
+      }
+    }
+  }
+}

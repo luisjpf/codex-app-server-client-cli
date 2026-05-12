@@ -1,0 +1,16 @@
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "initialize",
+  "params": {
+    "clientInfo": {
+      "name": "codex-app-server-client-cli",
+      "version": "0.1.0",
+      "title": "Codex app-server client CLI"
+    },
+    "capabilities": {
+      "experimentalApi": true,
+      "optOutNotificationMethods": []
+    }
+  }
+}

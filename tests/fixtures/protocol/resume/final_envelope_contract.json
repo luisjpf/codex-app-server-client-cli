@@ -1,0 +1,69 @@
+{
+  "ok": true,
+  "command": "resume",
+  "session": {
+    "alias": "feature-auth",
+    "ephemeral": false,
+    "id": "sess_new",
+    "last_active_at": null,
+    "repo_root": "__REPO_ROOT__",
+    "workspace_root": "__REPO_ROOT__",
+    "yolo": false
+  },
+  "data": {
+    "turn_id": "turn_resumed",
+    "output": {
+      "summary": "approval resumed"
+    },
+    "events": [
+      {
+        "kind": "approval_requested",
+        "request_id": "approval-1",
+        "item_id": "item-approval",
+        "raw_method": "item/commandExecution/requestApproval",
+        "sequence": 1,
+        "data": {
+          "itemId": "item-approval",
+          "summary": "Run npm test",
+          "command": [
+            "npm",
+            "test"
+          ],
+          "requestedAt": "2026-05-11T20:15:00Z"
+        }
+      }
+    ]
+  },
+  "meta": {
+    "session_selection": {
+      "lifecycle": "reused",
+      "reason": "approval_resume_token"
+    },
+    "policy": {
+      "last_approval": {
+        "category": "command_execution",
+        "decision": "require_operator",
+        "risk_traits": [
+          "shell_exec"
+        ],
+        "yolo_effective": false
+      },
+      "yolo": {
+        "effective": false,
+        "session_enabled": false,
+        "source": "default_policy"
+      }
+    },
+    "server": {
+      "handshake_complete": true,
+      "next_request_id": 3,
+      "server_metadata": {
+        "codex_home": "/tmp/codex-home",
+        "platform_family": "unix",
+        "platform_os": "macos",
+        "user_agent": "codex-app-server/0.test"
+      },
+      "transport_open": true
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "ok": true,
+  "command": "run",
+  "session": {
+    "alias": "feature-auth",
+    "ephemeral": false,
+    "id": "sess_cli",
+    "last_active_at": null,
+    "repo_root": "__REPO_ROOT__",
+    "workspace_root": "/tmp/repo",
+    "yolo": false
+  },
+  "data": {
+    "output": {
+      "summary": "cli completed"
+    },
+    "turn_id": "turn_cli"
+  },
+  "meta": {
+    "session_selection": {
+      "lifecycle": "created",
+      "reason": "no_workspace_match"
+    },
+    "policy": {
+      "last_approval": null,
+      "yolo": {
+        "effective": false,
+        "session_enabled": false,
+        "source": "default_policy"
+      }
+    },
+    "server": {
+      "handshake_complete": true,
+      "next_request_id": 4,
+      "server_metadata": {
+        "codex_home": "/tmp/codex-home",
+        "platform_family": "unix",
+        "platform_os": "macos",
+        "user_agent": "codex-app-server/0.test"
+      },
+      "transport_open": true
+    }
+  }
+}

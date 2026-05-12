@@ -1,0 +1,35 @@
+{
+  "thread_start_params": {
+    "approvalPolicy": "on-request",
+    "cwd": "__REPO_ROOT__/src/bin",
+    "ephemeral": true,
+    "historyMode": "clean_workspace_identity",
+    "model": null,
+    "sandboxPolicy": "workspace-write",
+    "workspaceRoot": "__REPO_ROOT__",
+    "yoloMode": false
+  },
+  "session": {
+    "alias": null,
+    "ephemeral": true,
+    "id": "sess_ephemeral",
+    "last_active_at": null,
+    "repo_root": "__REPO_ROOT__",
+    "workspace_root": "__REPO_ROOT__",
+    "yolo": false
+  },
+  "meta": {
+    "session_selection": {
+      "lifecycle": "created",
+      "reason": "explicit_ephemeral"
+    },
+    "policy": {
+      "last_approval": null,
+      "yolo": {
+        "effective": false,
+        "session_enabled": false,
+        "source": "default_policy"
+      }
+    }
+  }
+}

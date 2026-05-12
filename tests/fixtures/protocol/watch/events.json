@@ -1,0 +1,36 @@
+[
+  {
+    "type": "turn.started",
+    "sequence": 1,
+    "protocol_method": "turn/started",
+    "data": {
+      "threadId": "thread-1",
+      "turnId": "turn-1"
+    },
+    "thread_id": "thread-1",
+    "turn_id": "turn-1"
+  },
+  {
+    "type": "item.agent_message.delta",
+    "sequence": 2,
+    "protocol_method": "item/agentMessage/delta",
+    "data": {
+      "itemId": "item-1",
+      "delta": "Hello"
+    },
+    "item_id": "item-1",
+    "delta": "Hello"
+  },
+  {
+    "type": "turn.completed",
+    "sequence": 3,
+    "protocol_method": "turn/completed",
+    "data": {
+      "threadId": "thread-1",
+      "turnId": "turn-1",
+      "status": "completed"
+    },
+    "thread_id": "thread-1",
+    "turn_id": "turn-1"
+  }
+]

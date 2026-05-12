@@ -1,0 +1,34 @@
+{
+  "ok": false,
+  "command": "run",
+  "error": {
+    "code": "approval_required",
+    "message": "run: server requested approval before execution can continue"
+  },
+  "approval": {
+    "approval_id": "approval-1",
+    "session_id": "sess_new",
+    "scope": "command_execution",
+    "risk_traits": [
+      "shell_exec"
+    ],
+    "summary": "Run npm test",
+    "requested_action": "[\"npm\",\"test\"]",
+    "requested_at": "2026-05-11T20:15:00Z",
+    "resume_token": "sess_new:approval-1",
+    "status": "pending",
+    "raw_method": "item/commandExecution/requestApproval",
+    "request_id": "approval-1",
+    "item_id": "item-approval",
+    "data": {
+      "itemId": "item-approval",
+      "summary": "Run npm test",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "requestedAt": "2026-05-11T20:15:00Z",
+      "yoloMode": false
+    }
+  }
+}
