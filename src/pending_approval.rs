@@ -5,6 +5,11 @@ use std::path::{Path, PathBuf};
 use std::thread;
 use std::time::{Duration, Instant};
 
+#[cfg(unix)]
+use std::fs::Permissions;
+#[cfg(unix)]
+use std::os::unix::fs::{OpenOptionsExt, PermissionsExt};
+
 use serde::{Deserialize, Serialize};
 
 use crate::approval::Approval;
@@ -159,9 +164,45 @@ fn save_store(path: &Path, store: &PendingApprovalStore) -> Result<(), AppError>
     }
     let content = serde_json::to_string_pretty(store).map_err(AppError::json)?;
     let temp_path = temporary_store_path(path);
-    fs::write(&temp_path, content)
-        .map_err(|source| AppError::config_io(temp_path.clone(), source))?;
-    fs::rename(&temp_path, path).map_err(|source| AppError::config_io(path.to_path_buf(), source))
+    write_store_file(&temp_path, &content)?;
+    fs::rename(&temp_path, path)
+        .map_err(|source| AppError::config_io(path.to_path_buf(), source))?;
+    set_private_permissions(path)
+}
+
+fn write_store_file(path: &Path, content: &str) -> Result<(), AppError> {
+    #[cfg(unix)]
+    {
+        use std::io::Write;
+
+        let mut file = OpenOptions::new()
+            .create(true)
+            .write(true)
+            .truncate(true)
+            .mode(0o600)
+            .open(path)
+            .map_err(|source| AppError::config_io(path.to_path_buf(), source))?;
+        file.write_all(content.as_bytes())
+            .map_err(|source| AppError::config_io(path.to_path_buf(), source))?;
+        file.sync_all()
+            .map_err(|source| AppError::config_io(path.to_path_buf(), source))?;
+        Ok(())
+    }
+
+    #[cfg(not(unix))]
+    {
+        fs::write(path, content).map_err(|source| AppError::config_io(path.to_path_buf(), source))
+    }
+}
+
+fn set_private_permissions(path: &Path) -> Result<(), AppError> {
+    #[cfg(unix)]
+    {
+        fs::set_permissions(path, Permissions::from_mode(0o600))
+            .map_err(|source| AppError::config_io(path.to_path_buf(), source))?;
+    }
+
+    Ok(())
 }
 
 fn temporary_store_path(path: &Path) -> PathBuf {

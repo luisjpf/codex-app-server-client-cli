@@ -8,7 +8,7 @@ Updated: 2026-05-12
 
 ## Goal
 
-Build a Rust CLI that can talk directly to `codex app-server` for one-shot, automation-friendly Hermes usage without inventing a second backend API.
+Build a Rust CLI that can talk directly to `codex app-server` for one-shot, automation-friendly usage without inventing a second backend API.
 
 Non-goals for v1:
 - implementing the protocol in this document
@@ -20,8 +20,8 @@ Non-goals for v1:
 
 This note is based on the protocol surface already demonstrated in three places:
 
-1. `codex-manager-app/docs/codex-app-server-interface.md`
-2. `codex-manager-app/app/src/main/java/com/mindysm/codexmanager/CodexRuntime.kt`
+1. earlier internal interface notes for `codex app-server`
+2. an earlier client implementation used to validate protocol shape
 3. local `codex-cli 0.128.0` inspection via:
    - `codex app-server --help`
    - `codex app-server generate-json-schema`
@@ -83,7 +83,7 @@ Implication: our client should persist handshake metadata in memory for the acti
 
 ### Confirmed core request methods
 
-Already used or documented in `codex-manager-app`:
+Already used or documented in prior client explorations:
 - `thread/list`
 - `thread/start`
 - `thread/resume`
@@ -136,7 +136,7 @@ The schema and Android client both show server-initiated JSON-RPC requests for a
 
 This is important for CLI design:
 - one-shot commands must not silently hang when approval is needed
-- non-interactive Hermes usage needs a deterministic policy for approval requests
+- non-interactive automation usage needs a deterministic policy for approval requests
 - approval events should become machine-readable output and a dedicated exit code
 
 ### Practical v1 protocol subset
@@ -202,7 +202,7 @@ Recommended shape:
 Why not a single binary-only file layout?
 - the CLI will need reusable request/response types, connection management, and event handling very quickly
 - a lib split makes it much easier to test protocol behavior without shelling out through the binary
-- Hermes may eventually want this logic embedded in another local tool or reused by integration tests
+- this logic may eventually need to be embedded in another local tool or reused by integration tests
 - the extra structure cost is small now, but a late refactor would be noisy once streaming and approvals exist
 
 Why not a multi-crate workspace yet?
@@ -268,9 +268,9 @@ Suggested env vars:
 - `CODEX_APP_SERVER_MODEL`
 - `CODEX_APP_SERVER_OUTPUT`
 
-Why this model fits Hermes:
+Why this model fits automation-oriented CLI usage:
 - a one-shot CLI should be runnable with a single command and zero interactive setup
-- env vars are easy for Hermes to inject per call
+- env vars are easy for callers to inject per call
 - config file provides stable local defaults for repeated usage
 - per-command flags still allow override without editing disk state
 
@@ -313,7 +313,7 @@ Recommended initial commands:
 - `fs cat --path <path>`
   - wrap `fs/readFile`
 
-This is enough for Hermes to inspect server state, create/resume threads, and submit prompts.
+This is enough for an automation caller to inspect server state, create/resume threads, and submit prompts.
 
 ## Dependency decisions
 
@@ -371,7 +371,7 @@ Dependency policy:
 
 ## JSON output conventions
 
-Decision: make JSON the default output for commands intended for Hermes automation.
+Decision: make JSON the default output for commands intended for automation.
 
 ### Non-streaming commands
 
@@ -440,7 +440,7 @@ Rules:
 ### Text mode
 
 Text mode can exist for humans, but should be explicitly requested with `--output text`.
-Defaulting to JSON reduces ambiguity for Hermes.
+Defaulting to JSON reduces ambiguity for automation callers.
 
 ## Exit-code policy
 
@@ -464,7 +464,7 @@ Examples:
 - bad config file parse -> `6`
 - `item/*/requestApproval` received during one-shot non-interactive run -> `7`
 
-This gives Hermes enough signal to branch without scraping stderr text.
+This gives automation callers enough signal to branch without scraping stderr text.
 
 ## Recommended v1 implementation stance
 
@@ -495,5 +495,5 @@ These are real but should not block the first CLI:
 ## Final recommendation
 
 Build the first Rust client as a single Cargo package with a reusable library core and a thin CLI binary.
-Target the confirmed app-server subset already proven by `codex-manager-app` and the generated schema: initialize, model listing, thread lifecycle, turn execution, directory browsing, streaming notifications, and approval detection.
-Default all automation-oriented commands to structured JSON output and keep a stable exit-code contract so Hermes can call the binary predictably.
+Target the confirmed app-server subset already proven by prior client exploration and the generated schema: initialize, model listing, thread lifecycle, turn execution, directory browsing, streaming notifications, and approval detection.
+Default all automation-oriented commands to structured JSON output and keep a stable exit-code contract so other tools can call the binary predictably.

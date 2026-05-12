@@ -290,8 +290,18 @@ The script runs:
 - `cargo clippy --all-targets --all-features -- -D warnings`
 - `cargo test`
 
+## Security notes
+
+- The default WebSocket URL is loopback-only: `ws://127.0.0.1:4500`.
+- If you configure a non-loopback endpoint, prefer authenticated connections and avoid sending bearer tokens over an untrusted plain-`ws://` network path.
+- Pending approvals are stored locally so non-interactive flows can be resumed. Treat local config storage as sensitive if approval payloads may include command or path details.
+
 ## Docs
 
 - `docs/v1-cli-spec.md` — current implemented v1 contract
 - `docs/v1-operator-notes.md` — operator guidance for JSON-first automation, approvals, and release scope
 - `docs/v1-architecture.md` — protocol/background note and longer-term context
+
+## License
+
+MIT. See [LICENSE](LICENSE).
