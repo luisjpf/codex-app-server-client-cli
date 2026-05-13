@@ -62,6 +62,28 @@ Binary name:
 codex-app-server-client-cli
 ```
 
+Install directly from the public GitHub repo:
+
+```bash
+cargo install --git https://github.com/luisjpf/codex-app-server-client-cli
+```
+
+## Agent skill
+
+This repository includes an installable agent skill for coding agents that support GitHub-hosted Agent Skills.
+
+Install with GitHub CLI:
+
+```bash
+gh skill install luisjpf/codex-app-server-client-cli codex-app-server-client-cli --agent codex --scope user
+gh skill install luisjpf/codex-app-server-client-cli codex-app-server-client-cli --agent claude-code --scope user
+gh skill install luisjpf/codex-app-server-client-cli codex-app-server-client-cli --agent openclaw --scope user
+```
+
+The skill lives at `skills/codex-app-server-client-cli/SKILL.md` and teaches agents how to install the binary, check health, call `run`/`resume`, stream JSONL with `--watch`, and handle approval-required exits.
+
+Agents that read repository guidance can also use `AGENTS.md` at the repo root.
+
 ## Config
 
 Default config file path is resolved via Rust `dirs::config_dir()`:
