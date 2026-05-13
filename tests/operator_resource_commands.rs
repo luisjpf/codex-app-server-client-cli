@@ -717,7 +717,8 @@ async fn send_result(socket: &mut TestSocket, id: RequestId, result: Value) {
                 "id": id,
                 "result": result,
             })
-            .to_string(),
+            .to_string()
+            .into(),
         ))
         .await
         .expect("send result");
@@ -734,7 +735,8 @@ async fn send_error(socket: &mut TestSocket, id: RequestId, code: i64, message: 
                     "message": message,
                 }
             })
-            .to_string(),
+            .to_string()
+            .into(),
         ))
         .await
         .expect("send error");
@@ -742,7 +744,7 @@ async fn send_error(socket: &mut TestSocket, id: RequestId, code: i64, message: 
 
 async fn send_notification(socket: &mut TestSocket, payload: Value) {
     socket
-        .send(Message::Text(payload.to_string()))
+        .send(Message::Text(payload.to_string().into()))
         .await
         .expect("send notification");
 }

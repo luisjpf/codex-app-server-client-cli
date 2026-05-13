@@ -751,7 +751,7 @@ async fn send_text_message<T: Serialize>(
 ) -> Result<(), AppError> {
     let text = serde_json::to_string(value).map_err(AppError::json)?;
     socket
-        .send(Message::Text(text))
+        .send(Message::Text(text.into()))
         .await
         .map_err(|err| AppError::connection(phase, err.to_string()))
 }

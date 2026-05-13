@@ -1328,7 +1328,8 @@ async fn send_result(
                 "id": id,
                 "result": result,
             })
-            .to_string(),
+            .to_string()
+            .into(),
         ))
         .await
         .expect("send result");
@@ -1339,7 +1340,7 @@ async fn send_notification(
     payload: Value,
 ) {
     socket
-        .send(Message::Text(payload.to_string()))
+        .send(Message::Text(payload.to_string().into()))
         .await
         .expect("send notification");
 }

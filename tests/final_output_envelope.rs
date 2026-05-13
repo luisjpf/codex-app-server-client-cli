@@ -146,7 +146,7 @@ async fn write_json(
     value: Value,
 ) {
     socket
-        .send(Message::Text(value.to_string()))
+        .send(Message::Text(value.to_string().into()))
         .await
         .expect("send json frame");
 }
