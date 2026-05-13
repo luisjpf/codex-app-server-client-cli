@@ -9,7 +9,7 @@ This project is currently pre-1.0. Security fixes, if needed, will be applied to
 Please do not open a public issue for suspected security vulnerabilities.
 
 Instead, report them privately to:
-- `luis.j245@gmail.com`
+- `luis@luisj.me`
 
 Include:
 - a description of the issue
